@@ -1,0 +1,206 @@
+ To be ignored
+ 
+ 
+ // for (index, line) in reader.lines().enumerate(){
+    //     let string_to_analyze = line.expect("(analyze) - failed to read the lines of the file");
+    //     for (indexy, rule )in rules.into_iter().enumerate(){
+    //         let re = Regex::new(rule.rule.as_str()).unwrap();
+    //         match re.is_match(string_to_analyze.as_str()){
+    //             Ok(boolresult) => if boolresult {
+    //                  analyzed_block[indexy].location.push(format!("{}{}{}{}{} -> {}","(",file_name," Line-",index+1,")", string_to_analyze.as_str() ));
+    //             }
+    //             Err(err) => println!("{}",err)
+    //         }
+
+    //     }
+
+        
+
+    // }
+
+     // for (indexy, rule )in rules.into_iter().enumerate(){
+    //     let re = Regex::new(rule.rule.as_str()).unwrap();
+    //     let matches = re.find(&foo);
+        
+    //     let match_option = matches.unwrap();
+    //     println!("{:?},  ",print_type_of(&match_option.as_ref()));
+    //     if match_option.is_some(){
+    //         let m = match_option.unwrap();
+    //         let linenumber = line_from_bytes(&foo, m.start(), m.end());
+
+    //         //Removing commennt matches
+    //         let comment_check = m.as_str().trim();
+    //         if comment_check.starts_with("/"){
+    //             continue;
+    //         }
+    //         print!("{:?} {:?}",print_type_of(&m),print_type_of(&match_option));
+    //         analyzed_block[indexy].location.push(format!("{}{}{}{}{} -> {}","(",file_name," Line-",linenumber,")", m.as_str() ));
+    //     }
+    // } 
+
+
+    // for (indexy, rule )in rules.into_iter().enumerate(){
+    //     let re = Regex::new(rule.rule.as_str()).unwrap();
+    //     println!("{}",re);
+    //     let contents = fs::read_to_string(format!("{}/{}", path_name, file_name)).expect("Should have been able to read the file");
+    //     println!("{}",re.is_match(&contents))
+
+    // }
+
+    // for (index, line) in reader.lines().enumerate(){
+    //     let string_to_analyze = line.expect("(analyze) - failed to read the lines of the file");
+    //     for (indexy, rule )in rules.into_iter().enumerate(){
+    //         let re = Regex::new(rule.rule.as_str()).unwrap();
+    //         if re.is_match(string_to_analyze.as_str()){
+    //             analyzed_block[indexy].location.push(format!("{}{}{}{}{} -> {}","(",file_name," Line-",index+1,")", string_to_analyze.as_str() ));
+    //         }
+
+    //     }
+
+        
+    // }
+
+
+
+    let file = File::open(format!("{}/{}", path_name, file_name)).expect("(analyzing) - Failed to open the file");
+// let reader = BufReader::new(file);
+
+
+----------
+
+use std::io::{BufReader, BufRead};
+
+----------
+
+
+// Create rules from user input
+// no return
+fn creating_rules(){
+    println!("{}", "----Rule-Creation----\n");
+    loop{
+        let mut s_or_n = String::new();
+        println!("Want to add a new rule?{}", "(s/N): ");
+        std::io::stdin().read_line(&mut s_or_n).expect("failed to readline");
+        match s_or_n.as_str().trim_end() {
+            "s" => (),
+            "S" => (),
+            _ => break
+        }
+        let mut id = String::new();
+        let mut description = String::new();
+        let mut re = String::new();
+        println!("id:");
+        std::io::stdin().read_line(&mut id).expect("failed to readline");
+        println!("Description:");
+        std::io::stdin().read_line(&mut description).expect("failed to readline");
+        println!("Regex:");
+        std::io::stdin().read_line(&mut re).expect("failed to readline");
+        receiving_rules_from_user(id, description, re);
+    }
+
+}
+
+fn confirmation(){
+    println!("{}", "----File Analysis----\n");
+    loop{
+        let mut s_or_n = String::new();
+        println!("Would you like to analyze the contracts?{}", "(press any key to confirm): ");
+        std::io::stdin().read_line(&mut s_or_n).expect("failed to readline");
+        match s_or_n.as_str().trim_end() {
+            "s" => (),
+            "S" => (),
+            _ => break
+        }
+        let mut id = String::new();
+        let mut description = String::new();
+        let mut re = String::new();
+        println!("id:");
+        std::io::stdin().read_line(&mut id).expect("failed to readline");
+        println!("Description:");
+        std::io::stdin().read_line(&mut description).expect("failed to readline");
+        println!("Regex:");
+        std::io::stdin().read_line(&mut re).expect("failed to readline");
+        receiving_rules_from_user(id, description, re);
+    }
+
+}
+
+// Writes the rules into a txt file
+// no return
+fn receiving_rules_from_user(id: String, description: String, re: String){
+    let mut my_file = std::fs::File::create(format!("rules/rule_{}.txt", &id.trim_end())).expect("creation failed");
+    my_file.write_all(format!("{}",id).as_bytes()).expect("write failed");
+    my_file.write_all(format!("{}",description).as_bytes()).expect("write failed");
+    my_file.write_all(format!("{}",re).as_bytes()).expect("write failed");
+    println!("{}","-----New-Rule-Created-----".on_bright_green().blink());
+}
+
+
+
+
+
+
+---------
+
+
+// for file in &files_names{
+    //     results = analyzing(file.to_string(), &path_name.to_string(), &gasoprules); // Analyzing every single solidity file
+    //     if writing_to_a_file(&results, &gasop_file, file.to_string()){ // writing the results into a file
+    //         print!("{}", "Gas Optimization output file created Successfully".green())
+    //     }
+    //     print!("\n{}{}\n","---------Results: ".green(),file.green());
+
+    //     // This loop will print all the vulns/gas found by the analyzing function
+    //     for result in results{
+    //         if result.location.len() > 0{
+    //             print!("---->{}\n",result.title.bright_yellow().underline());
+    //             print!("     {}\n",result.description.bright_yellow());
+    //             for (index, bug )in result.location.into_iter().enumerate(){
+    //                 print!("{}{}#:\n","Case ".blue(), index);
+    //                 print!("{}\n\n", bug.bright_red().bold());
+    //             }
+    //         }
+    //     }
+    // }
+
+    // for file in &files_names{
+    //     lowresults = analyzing(file.to_string(), &path_name.to_string(), &lowrules); // Analyzing every single solidity file
+        
+    //     if writing_to_a_file(&lowresults, &low_file, file.to_string()){ // writing the results into a file
+    //         print!("{}", "Low severity output file created Successfully".green())
+    //     }
+       
+    //     print!("\n{}{}\n","---------Results: ".green(),file.green());
+
+    //     // This loop will print all the vulns/gas found by the analyzing function
+    //     for result in lowresults{
+    //         if result.location.len() > 0{
+    //             print!("---->{}\n",result.title.bright_yellow().underline());
+    //             print!("     {}\n",result.description.bright_yellow());
+    //             for (index, bug )in result.location.into_iter().enumerate(){
+    //                 print!("{}{}#:\n","Case ".blue(), index);
+    //                 print!("{}\n\n", bug.bright_red().bold());
+    //             }
+    //         }
+    //     }
+    // }
+
+    // for file in &files_names{
+    //     ncresults = analyzing(file.to_string(), &path_name.to_string(), &ncrules);// Analyzing every single solidity file
+    //     if writing_to_a_file(&ncresults, &nc_file, file.to_string()){ // writing the results into a file
+    //         print!("{}", "Non Critical severity output file created Successfully".green())
+    //     }
+    //     print!("\n{}{}\n","---------Results: ".green(),file.green());
+
+    //     // This loop will print all the vulns/gas found by the analyzing function
+    //     for result in ncresults{
+    //         if result.location.len() > 0{
+    //             print!("---->{}\n",result.title.bright_yellow().underline());
+    //             print!("     {}\n",result.description.bright_yellow());
+    //             for (index, bug )in result.location.into_iter().enumerate(){
+    //                 print!("{}{}#:\n","Case ".blue(), index);
+    //                 print!("{}\n\n", bug.bright_red().bold());
+    //             }
+    //         }
+    //     }
+    // }
